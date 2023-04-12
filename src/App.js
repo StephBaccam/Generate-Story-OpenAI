@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./css/App.css";
 import axios from "axios";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "./config/fbConfig";
 
@@ -9,22 +9,37 @@ function App() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
-  const [responseImgTest, setResponseImgTest] = useState("");
   const [loading, setLoading] = useState(false);
   const [placeholder] = useState(
     "Un aventurier part retrouver un trésor perdu, ambiance futuriste."
   );
 
-  const handleSubmit = (e) => {
+  let histoireTexte = "";
+  let histoireImageUrl = "";
+  let histoireImagePath = "";
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    generateImage();
-    generateText();
+    generateStory();
+  }
+
+  const createFirestoreDocument = async () => {
+    console.log("Text to Add : " + histoireTexte);
+    console.log("ImageUrl to Add : " + histoireImageUrl);
+    console.log("ImagePath to Add : " + histoireImagePath);
+    const docRef = await addDoc(collection(db, "histoires"), {
+      texte: histoireTexte,
+      imageUrl: histoireImageUrl,
+      imagePath: histoireImagePath
+    });
+    console.log("Document created with ID : " + docRef.id)
+    setLoading(false);
   }
 
   const generateImage = async () => {
     // Send a request to the server with the prompt
-    axios
+    await axios
       .post("http://localhost:8000/image", { prompt })
       .then((res) => {
         // Update the response state with the server's response
@@ -38,7 +53,10 @@ function App() {
           getDownloadURL(storageRef)
           .then((url) => {
             // Insert url into an <img> tag to "download"
-            console.log(url)
+            console.log('URL Fetched! : ' + url);
+            histoireImageUrl = url;
+            histoireImagePath = `gs://generate-story-openai.appspot.com/images/${res.data.created}.jpeg`;
+            createFirestoreDocument()
           })
         })
       })
@@ -47,21 +65,19 @@ function App() {
       });
   };
 
-  const generateText = async () => {
+  const generateStory = async () => {
     // Send a request to the server with the prompt
-    axios
+    await axios
       .post("http://localhost:8000/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
-        setDoc(doc(db, "histoire", "testId"), {
-          texte: res.data
-        });
-        setLoading(false);
+        histoireTexte = res.data;
       })
       .catch((err) => {
         console.error(err);
       });
+      await generateImage();
   };
 
   return (
