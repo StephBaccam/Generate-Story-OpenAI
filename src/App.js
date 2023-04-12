@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Configuration, OpenAIApi } from "openai";
-import "./App.css";
+import "./css/App.css";
 import axios from "axios";
 
 function App() {
@@ -8,24 +7,21 @@ function App() {
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [placeholder, setPlaceholder] = useState(
-    "Search Bears with Paint Brushes the Starry Night, painted by Vincent Van Gogh.."
+  const [placeholder] = useState(
+    "Un aventurier part retrouver un trésor perdu, ambiance futuriste."
   );
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     generateImage();
     generateText();
-    setLoading(false);
   }
 
   const generateImage = async () => {
-    setPlaceholder(`Search ${prompt}..`);
-    setLoading(true);
     // Send a request to the server with the prompt
     axios
-      .post("http://localhost:8081/image", { prompt })
+      .post("http://localhost:8000/image", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data);
@@ -36,13 +32,13 @@ function App() {
   };
 
   const generateText = () => {
-    setLoading(true)
     // Send a request to the server with the prompt
     axios
-      .post("http://localhost:8081/chat", { prompt })
+      .post("http://localhost:8000/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
@@ -50,39 +46,46 @@ function App() {
   };
 
   return (
-    <div>
-      {loading ? (
+    <div className="app-main">
         <>
-          <h2>Generating..Please Wait..</h2>
-          <div>
-            <div></div>
-            <div></div>
-          </div>
-        </>
-      ) : (
-        <>
-          <h2>Generate an Image using Open AI API</h2>
-          <form onSubmit={handleSubmit}>
-          <textarea
-            // className="app-input"
-            placeholder={placeholder}
-            onChange={(e) => setPrompt(e.target.value)}
-            rows="10"
-            cols="40"
-          />
-          {response.length > 0 ? (
-            <img src={response} alt="result" />
+          <h2>Créer une histoire grâce à Open AI API</h2>
+
+          <form onSubmit={handleSubmit} className="app-form">
+            <textarea
+              className="app-input"
+              placeholder={placeholder}
+              onChange={(e) => setPrompt(e.target.value)}
+              rows="10"
+              cols="40"
+            />
+            <button type="submit">Générer</button>
+          </form>
+
+          {loading ? (
+            <div className="app-load">
+              <h2>Génération de votre histoire...</h2>
+              <div className="lds-ripple">
+                <div></div>
+                <div></div>
+              </div>
+            </div>
           ) : (
             <></>
           )}
 
-          <p>Text from chat GPT : {responseText}</p>
-          <button type="submit">Submit</button>
-          </form>
-          
-
+          <div className="app-result">
+            {response.length > 0 ? (
+              <img className="result-image" src={response} alt="result" />
+            ) : (
+              <></>
+            )}
+            {responseText.length > 0 ? (
+              <p>Votre histoire : {responseText}</p>
+            ) : (
+              <></>
+            )}
+          </div>
         </>
-      )}
     </div>
   );
 }

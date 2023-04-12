@@ -43,8 +43,12 @@ app.post("/image", async (req, res) => {
     res.send(completion.data.data[0].url);
   });
 
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
 // Start the server
-const port = 8081;
+const port = 8000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
