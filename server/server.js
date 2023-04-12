@@ -25,7 +25,7 @@ app.post("/chat", async (req, res) => {
     prompt: "Ecris moi une histoire de " + prompt,
     max_tokens: 1024
   });
-  console.log(completion.data)
+  console.log("CHAT CREATED : " + completion.data.created)
   res.send(completion.data.choices[0].text);
 });
 
@@ -39,8 +39,10 @@ app.post("/image", async (req, res) => {
         prompt: prompt,
         n: 1,
         size: "512x512",
+        response_format: "b64_json"
     });
-    res.send(completion.data.data[0].url);
+    console.log("IMAGE CREATED : " + completion.data.created)
+    res.send(completion.data);
   });
 
 app.get('/', (req, res) => {
