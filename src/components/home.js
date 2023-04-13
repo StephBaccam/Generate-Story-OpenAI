@@ -31,12 +31,6 @@ function Home() {
   let histoireImageUrl = "";
   let histoireImagePath = "";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    generateStory();
-  }
-
   const createFirestoreDocument = async () => {
     console.log("Text to Add : " + histoireTexte);
     console.log("ImageUrl to Add : " + histoireImageUrl);
