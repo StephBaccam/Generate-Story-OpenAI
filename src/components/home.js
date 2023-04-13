@@ -152,7 +152,7 @@ function Home() {
                 <p className="text-white">Votre histoire : {responseText}</p>
                 <button 
                   onClick={() => {
-                    let followStory = "Ecris moi la suite de cette histoire : " + responseText;
+                    let followStory = "Raconte moi la suite de l'histoire : " + responseText + ". Maximum 8 phrases.";
                     setNextStory(nextStory+2);
                     setPrompt(followStory);
                   }} 

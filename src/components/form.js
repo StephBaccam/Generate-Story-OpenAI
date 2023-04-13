@@ -49,19 +49,15 @@ function Form(props) {
         }
         // Fin vérification
 
-        let promptFormatText  = "Raconte moi une histoire ";
-        let promptFormatImage = "";
+        let promptFormatText  = "Raconte une histoire ";
+        let promptFormatImage = "Dessine moi ";
 
         if (formIsValid) {
 
             promptFormatImage += prompt;
 
-            if (style !== "") {
-                promptFormatImage += ", style " + style;
-            }
-
             if (genre !== "") {
-                promptFormatImage += ", pour un livre de " + genre.toLowerCase();
+                promptFormatImage += ", dans un genre " + genre.toLowerCase();
 
                 if(genre === "Pour enfants"){
                     promptFormatText += genre.toLowerCase();
@@ -70,14 +66,21 @@ function Form(props) {
                 }
             }
 
+            if (style !== "") {
+                promptFormatImage += ", et dans un style " + style;
+            }
+
+            promptFormatImage += ". Le dessin doit être détaillé et très joli.";
             promptFormatText += " à propos de " + prompt;
 
             if (nomPerso1 !== "") {
-                promptFormatText += ", le personnage s'appel " + nomPerso1;
+                promptFormatText += ", le personnage s'appelle " + nomPerso1;
             }
             if (nomPerso2 !== "") {
-                promptFormatText += ", le deuxième personnage s'appel " + nomPerso2;
+                promptFormatText += ", le deuxième personnage s'appelle " + nomPerso2;
             }
+
+            promptFormatText += ". Maximum 8 phrase."
 
             props.handleCallBack(promptFormatText, promptFormatImage, titre);
         }
