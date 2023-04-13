@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Auth() {
+function Connexion() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [passwordError, setpasswordError] = useState("");
@@ -10,8 +10,6 @@ function Auth() {
     let formIsValid = true;
 
     if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
-      formIsValid = false;
-      setemailError("Email Not Valid");
       return false;
     } else {
       setemailError("");
@@ -19,10 +17,6 @@ function Auth() {
     }
 
     if (!password.match(/^[a-zA-Z]{8,22}$/)) {
-      formIsValid = false;
-      setpasswordError(
-        "Only Letters and length must be min 8 Chracters and Max 22 Chracters"
-      );
       return false;
     } else {
       setpasswordError("");
@@ -71,23 +65,14 @@ function Auth() {
                   {passwordError}
                 </small>
               </div>
-              <div className="form-group form-check">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id="exampleCheck1"
-                />
-                <label className="form-check-label">Check me out</label>
-              </div>
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>
             </form>
           </div>
-          Source: <a href="https://askavy.com/react-form/">React Form</a>
         </div>
       </div>
     </div>
   );
 }
-export default Auth;
+export default Connexion;
