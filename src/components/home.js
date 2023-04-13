@@ -5,7 +5,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "../config/fbConfig";
 import Form from "../components/form";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Home() {
   const [titre, setTitre] = useState("");
