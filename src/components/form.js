@@ -49,32 +49,42 @@ function Form(props) {
         }
         // Fin vérification
 
-        let promptFormat = "";
+        let promptFormatText  = "Raconte moi une histoire ";
+        let promptFormatImage = "";
 
         if (formIsValid) {
-            promptFormat += prompt;
+
+            promptFormatImage += prompt;
+
+            if (style !== "") {
+                promptFormatImage += ", style " + style;
+            }
+
+            if (genre !== "") {
+                promptFormatImage += ", pour un livre de " + genre.toLowerCase();
+
+                if(genre === "Pour enfants"){
+                    promptFormatText += genre.toLowerCase();
+                }else{
+                    promptFormatText += "du genre " + genre.toLowerCase();
+                }
+            }
+
+            promptFormatText += " à propos de " + prompt;
 
             if (nomPerso1 !== "") {
-                promptFormat += ", le premier personnage s'appel " + nomPerso1;
+                promptFormatText += ", le personnage s'appel " + nomPerso1;
             }
-            // else{ à tester
-            //     promptFormat+= ", choisit un nom pour le permier personnage";
-            // }
             if (nomPerso2 !== "") {
-                promptFormat += ", le deuxième personnage s'appel " + nomPerso2;
+                promptFormatText += ", le deuxième personnage s'appel " + nomPerso2;
             }
-            if (genre !== "") {
-                promptFormat += ", genre " + genre;
-            }
-            if (style !== "") {
-                promptFormat += ", style " + style;
-            }
-            props.handleCallBack(promptFormat, titre);
+
+            props.handleCallBack(promptFormatText, promptFormatImage, titre);
         }
     }
 
-    const genreLivre = ["", "Contes de fées", "Histoire d'aventure", "Histoire historiques", "Histoire de science-fiction", "Histoire humoristique", "Historique éducative"]
-    const styleImage = ["", "BD", "manga", "cartoon", "pixel art", "flat design", "3D"]
+    const genreLivre = ["", "Conte de fées", "Aventure", "Historique", "Science-fiction", "Humoristique", "Pour enfants"]
+    const styleImage = ["", "BD", "Manga", "Cartoon", "Pixel art", "Flat design", "3D"]
     const placeholder = "Un jeune garçon part retrouver un trésor perdu";
 
     return (
@@ -149,7 +159,7 @@ function Form(props) {
                                 {styleImage.map(arrayItem => <option value={arrayItem} key={arrayItem}>{arrayItem}</option>)}
                             </select>
                         </div>
-                        <button type="submit" className="btn btn-primary">Générer</button>
+                        <button type="submit" className="btn btn-primary btn-lg">Générer</button>
                     </form>
                 </div>
             </div>

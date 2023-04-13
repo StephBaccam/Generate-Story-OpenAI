@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: "%OPENAI_API_KEY%",
+  apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -22,7 +22,7 @@ app.post("/chat", async (req, res) => {
   // Generate a response with ChatGPT
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: "Ecris moi une histoire pour enfant de " + prompt,
+    prompt: prompt,
     max_tokens: 1024
   });
   console.log("CHAT CREATED : " + completion.data.created)
@@ -32,11 +32,11 @@ app.post("/chat", async (req, res) => {
 // Set up the ChatGPT endpoint
 app.post("/image", async (req, res) => {
     // Get the prompt from the request
-    const { prompt } = req.body;
+    const { promptImage } = req.body;
   
     // Generate a response with ChatGPT
     const completion = await openai.createImage({
-        prompt: "Image pour enfant de " + prompt,
+        prompt: promptImage,
         n: 1,
         size: "512x512",
         response_format: "b64_json"

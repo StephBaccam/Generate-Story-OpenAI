@@ -10,27 +10,36 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 function Home() {
   const [titre, setTitre] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [promptImage, setPromptImage] = useState("");
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nextStory, setNextStory] = useState(0);
+  const [storyCount, setStoryCount] = useState(0);
+
   const auth = getAuth();
   const authUser = auth.currentUser;
   let isAuth = false;
-  function CallBack(formPrompt, titre) {
+
+  function CallBack(formPrompt, formPromptImage, titre) {
     setPrompt(formPrompt);
+    setPromptImage(formPromptImage);
     setTitre(titre);
+    setStoryCount(storyCount+1);
   }
 
   // Utilisation de useEffect pour récuperer la valeur de prompt une fois modifié
   useEffect(() => {
-    if (prompt !== "") {
-      console.log(prompt);
+    if (prompt !== "" && promptImage !== "" && storyCount == 1 && nextStory == 0) {
+      console.log("PREMIERE HISTOIRE");
       setLoading(true);
-      // generateImage();
-      // generateText();
+      generateStory();
+    }else if(nextStory > storyCount){
+      console.log("SUITE");
+      setLoading(true);
       generateStory();
     }
-  }, [prompt])
+  }, [prompt,promptImage,nextStory,storyCount])
 
   let histoireTexte = "";
   let histoireImageUrl = "";
@@ -69,10 +78,27 @@ function Home() {
     setLoading(false);
   }
 
+  const generateStory = async () => {
+    console.log("CHAT " + prompt);
+    console.log("IMAGE " + promptImage);
+    // Send a request to the server with the prompt
+    await axios
+      .post("http://localhost:8000/chat", { prompt })
+      .then((res) => {
+        // Update the response state with the server's response
+        setResponseText(res.data);
+        histoireTexte = res.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    await generateImage();
+  };
+
   const generateImage = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8081/image", { prompt })
+      .post("http://localhost:8000/image", { promptImage })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data.data[0].b64_json);
@@ -98,24 +124,10 @@ function Home() {
       });
   };
 
-  const generateStory = async () => {
-    // Send a request to the server with the prompt
-    await axios
-      .post("http://localhost:8081/chat", { prompt })
-      .then((res) => {
-        // Update the response state with the server's response
-        setResponseText(res.data);
-        histoireTexte = res.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    await generateImage();
-  };
-
 
   return (
     <div className="app-main">
+
       <Form handleCallBack={CallBack} />
 
       {loading ? (
@@ -128,15 +140,25 @@ function Home() {
         </div>
       ) : (
         <>
-          <h2>{titre}</h2>
           <div className="app-result">
+            <h2>{titre}</h2>
             {response.length > 0 ? (
               <img className="result-image" src={`data:image/jpeg;base64,${response}`} alt="result" />
             ) : (
               <></>
             )}
             {responseText.length > 0 ? (
-              <p className="text-white">Votre histoire : {responseText}</p>
+              <>
+                <p className="text-white">Votre histoire : {responseText}</p>
+                <button 
+                  onClick={() => {
+                    let followStory = "Ecris moi la suite de cette histoire : " + responseText;
+                    setNextStory(nextStory+2);
+                    setPrompt(followStory);
+                  }} 
+                  className="btn btn-primary">Continuer l'histoire
+                </button>
+              </>
             ) : (
               <></>
             )}
