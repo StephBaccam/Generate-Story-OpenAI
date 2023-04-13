@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../css/App.css";
 import axios from "axios";
-import { setDoc, doc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "../config/fbConfig";
 import Form from "../components/form";
@@ -37,13 +37,13 @@ function Home() {
     console.log("Text to Add : " + histoireTexte);
     console.log("ImageUrl to Add : " + histoireImageUrl);
     console.log("ImagePath to Add : " + histoireImagePath);
-    await setDoc(doc(db, "histoires", titre),{
+    const docRef = await addDoc(collection(db, "histoires"), {
       titre: titre,
       texte: histoireTexte,
       imageUrl: histoireImageUrl,
       imagePath: histoireImagePath
-    })
-    console.log("Document created with ID : " + titre)
+    });
+    console.log("Document created with ID : " + docRef.id)
     setLoading(false);
   }
 
