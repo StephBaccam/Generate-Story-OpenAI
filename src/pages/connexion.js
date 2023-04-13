@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Auth() {
+function Connexion() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [passwordError, setpasswordError] = useState("");
@@ -71,23 +71,14 @@ function Auth() {
                   {passwordError}
                 </small>
               </div>
-              <div className="form-group form-check">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id="exampleCheck1"
-                />
-                <label className="form-check-label">Check me out</label>
-              </div>
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>
             </form>
           </div>
-          Source: <a href="https://askavy.com/react-form/">React Form</a>
         </div>
       </div>
     </div>
   );
 }
-export default Auth;
+export default Connexion;
