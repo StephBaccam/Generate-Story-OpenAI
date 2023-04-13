@@ -33,11 +33,12 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-sm sticky-top" style={{ display: "block", backgroundColor: '#2F3643' }}>
             <div className="d-flex">
+            <span class="navbar-brand text-white mb-0 h1">Créateur d'histoires</span>
                 <div className="mr-auto">
                     <a href='/' className="navbar-text text-white ml-2">
                         Accueil
                     </a>
-                    {!userConnected ? (
+                    {userConnected ? (
                         <a href='/profil' className="navbar-text text-white ml-2">
                             Profil
                         </a>

@@ -80,7 +80,7 @@ function Form(props) {
                 promptFormatText += ", le deuxième personnage s'appelle " + nomPerso2;
             }
 
-            promptFormatText += ". Maximum 8 phrase."
+            promptFormatText += ". Maximum 8 phrases."
 
             props.handleCallBack(promptFormatText, promptFormatImage, titre);
         }
