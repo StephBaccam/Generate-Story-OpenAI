@@ -69,7 +69,7 @@ function Form(props) {
             if (style !== "") {
                 promptFormat += ", style " + style;
             }
-            props.handleCallBack(promptFormat);
+            props.handleCallBack(promptFormat, titre);
         }
     }
 

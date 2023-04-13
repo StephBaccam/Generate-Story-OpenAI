@@ -7,13 +7,15 @@ import { db, storage } from "../config/fbConfig";
 import Form from "../components/form";
 
 function Home() {
+  const [titre, setTitre] = useState("");
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function CallBack(formPrompt) {
+  function CallBack(formPrompt, titre) {
     setPrompt(formPrompt);
+    setTitre(titre);
   }
 
   // Utilisation de useEffect pour récuperer la valeur de prompt une fois modifié
@@ -36,6 +38,7 @@ function Home() {
     console.log("ImageUrl to Add : " + histoireImageUrl);
     console.log("ImagePath to Add : " + histoireImagePath);
     const docRef = await addDoc(collection(db, "histoires"), {
+      titre: titre,
       texte: histoireTexte,
       imageUrl: histoireImageUrl,
       imagePath: histoireImagePath
@@ -102,21 +105,24 @@ function Home() {
           </div>
         </div>
       ) : (
-        <></>
+        <>
+          <h2>{titre}</h2>
+          <div className="app-result">
+            {response.length > 0 ? (
+              <img className="result-image" src={`data:image/jpeg;base64,${response}`} alt="result" />
+            ) : (
+              <></>
+            )}
+            {responseText.length > 0 ? (
+              <p className="text-white">Votre histoire : {responseText}</p>
+            ) : (
+              <></>
+            )}
+          </div>
+        </>
       )}
 
-      <div className="app-result">
-        {response.length > 0 ? (
-          <img className="result-image" src={`data:image/jpeg;base64,${response}`} alt="result" />
-        ) : (
-          <></>
-        )}
-        {responseText.length > 0 ? (
-          <p className="text-white">Votre histoire : {responseText}</p>
-        ) : (
-          <></>
-        )}
-      </div>
+
     </div>
   )
 }
