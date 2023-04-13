@@ -53,7 +53,7 @@ function Home() {
   const generateImage = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8000/image", { prompt })
+      .post("http://localhost:8081/image", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data.data[0].b64_json);
@@ -82,7 +82,7 @@ function Home() {
   const generateStory = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8000/chat", { prompt })
+      .post("http://localhost:8081/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
@@ -118,7 +118,7 @@ function Home() {
           <></>
         )}
         {responseText.length > 0 ? (
-          <p>Votre histoire : {responseText}</p>
+          <p className="text-white">Votre histoire : {responseText}</p>
         ) : (
           <></>
         )}

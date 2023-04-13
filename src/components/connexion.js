@@ -10,8 +10,6 @@ function Connexion() {
     let formIsValid = true;
 
     if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
-      formIsValid = false;
-      setemailError("Email Not Valid");
       return false;
     } else {
       setemailError("");
@@ -19,10 +17,6 @@ function Connexion() {
     }
 
     if (!password.match(/^[a-zA-Z]{8,22}$/)) {
-      formIsValid = false;
-      setpasswordError(
-        "Only Letters and length must be min 8 Chracters and Max 22 Chracters"
-      );
       return false;
     } else {
       setpasswordError("");
