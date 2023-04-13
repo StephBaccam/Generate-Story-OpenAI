@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./css/App.css";
 import axios from "axios";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "./config/fbConfig";
+import Form from "./components/form";
 
 function App() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
-  const [responseImgTest, setResponseImgTest] = useState("");
   const [loading, setLoading] = useState(false);
-  const [placeholder] = useState(
-    "Un aventurier part retrouver un trésor perdu, ambiance futuriste."
-  );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    generateImage();
-    generateText();
+  function CallBack (formPrompt) {
+    setPrompt(formPrompt);
   }
+
+  // Utilisation de useEffect pour récuperer la valeur de prompt une fois modifié
+  useEffect(() => {
+    if(prompt !== ""){
+      console.log(prompt);
+      setLoading(true);
+      generateImage();
+      generateText();
+    }
+  }, [prompt])
 
   const generateImage = async () => {
     // Send a request to the server with the prompt
@@ -70,16 +74,7 @@ function App() {
         <>
           <h2>Créer une histoire grâce à Open AI API</h2>
 
-          <form onSubmit={handleSubmit} className="app-form">
-            <textarea
-              className="app-input"
-              placeholder={placeholder}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows="10"
-              cols="40"
-            />
-            <button type="submit">Générer</button>
-          </form>
+          <Form handleCallBack={CallBack}/>
 
           {loading ? (
             <div className="app-load">
