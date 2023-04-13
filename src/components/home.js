@@ -5,6 +5,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "../config/fbConfig";
 import Form from "../components/form";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 function Home() {
   const [titre, setTitre] = useState("");
@@ -12,7 +13,9 @@ function Home() {
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const auth = getAuth();
+  const authUser = auth.currentUser;
+  let isAuth = false;
   function CallBack(formPrompt, titre) {
     setPrompt(formPrompt);
     setTitre(titre);
@@ -33,7 +36,25 @@ function Home() {
   let histoireImageUrl = "";
   let histoireImagePath = "";
 
+  const isUserAuth = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        console.log(`L'utilisateur ${uid} est connecté`);
+        console.log(`Informations sur l'utilisateur : ${user.email}`)
+        isAuth = true;
+      } else {
+        // User is signed out
+        console.log("Pas d'utilisateur connecté")
+      }
+    });
+  }
+
   const createFirestoreDocument = async () => {
+    await isUserAuth();
+    console.log("isAuth value : " + isAuth)
     console.log("Text to Add : " + histoireTexte);
     console.log("ImageUrl to Add : " + histoireImageUrl);
     console.log("ImagePath to Add : " + histoireImagePath);
@@ -41,7 +62,8 @@ function Home() {
       titre: titre,
       texte: histoireTexte,
       imageUrl: histoireImageUrl,
-      imagePath: histoireImagePath
+      imagePath: histoireImagePath,
+      utilisateur: isAuth ? authUser.email : ""
     });
     console.log("Document created with ID : " + docRef.id)
     setLoading(false);

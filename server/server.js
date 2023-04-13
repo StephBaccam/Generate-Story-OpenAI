@@ -22,7 +22,7 @@ app.post("/chat", async (req, res) => {
   // Generate a response with ChatGPT
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: "Ecris moi une histoire de " + prompt,
+    prompt: "Ecris moi une histoire pour enfant de " + prompt,
     max_tokens: 1024
   });
   console.log("CHAT CREATED : " + completion.data.created)
@@ -36,7 +36,7 @@ app.post("/image", async (req, res) => {
   
     // Generate a response with ChatGPT
     const completion = await openai.createImage({
-        prompt: prompt,
+        prompt: "Image pour enfant de " + prompt,
         n: 1,
         size: "512x512",
         response_format: "b64_json"
