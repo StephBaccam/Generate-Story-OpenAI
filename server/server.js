@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: "%OPENAI_API_KEY%",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 })
 
 // Start the server
-const port = 8081;
+const port = 8000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

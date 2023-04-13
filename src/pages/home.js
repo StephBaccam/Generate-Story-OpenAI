@@ -1,18 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/App.css";
 import axios from "axios";
 import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage"
 import { db, storage } from "../config/fbConfig";
+import Form from "../components/form";
 
 function Home() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [placeholder] = useState(
-    "Un aventurier part retrouver un trésor perdu, ambiance futuriste."
-  );
+
+  function CallBack(formPrompt) {
+    setPrompt(formPrompt);
+  }
+
+  // Utilisation de useEffect pour récuperer la valeur de prompt une fois modifié
+  useEffect(() => {
+    if (prompt !== "") {
+      console.log(prompt);
+      setLoading(true);
+      // generateImage();
+      // generateText();
+      generateStory();
+    }
+  }, [prompt])
 
   let histoireTexte = "";
   let histoireImageUrl = "";
@@ -40,7 +53,7 @@ function Home() {
   const generateImage = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8081/image", { prompt })
+      .post("http://localhost:8000/image", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data.data[0].b64_json);
@@ -59,6 +72,7 @@ function Home() {
               createFirestoreDocument()
             })
         })
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
@@ -68,7 +82,7 @@ function Home() {
   const generateStory = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8081/chat", { prompt })
+      .post("http://localhost:8000/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
@@ -83,18 +97,7 @@ function Home() {
 
   return (
     <div className="app-main">
-      <h2>Créer une histoire grâce à Open AI API</h2>
-
-      <form onSubmit={handleSubmit} className="app-form">
-        <textarea
-          className="app-input"
-          placeholder={placeholder}
-          onChange={(e) => setPrompt(e.target.value)}
-          rows="10"
-          cols="40"
-        />
-        <button type="submit">Générer</button>
-      </form>
+      <Form handleCallBack={CallBack} />
 
       {loading ? (
         <div className="app-load">
