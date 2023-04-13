@@ -1,6 +1,7 @@
 import Navbar from "./layout/navbar"
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Inscription from "./components/inscription";
+import Connexion from "./components/connexion";
 import Home from "./components/home";
 
 function App() {
@@ -12,8 +13,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path='/' element={<Home/>}/>
-            <Route path='/inscription' element={<Inscription />}>
-            </Route>
+            <Route path='/inscription' element={<Inscription />}/>
+            <Route path='/connexion' element={<Connexion />}/>
           </Routes>
         </BrowserRouter>
       </>
