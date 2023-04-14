@@ -49,22 +49,18 @@ function Form(props) {
         }
         // Fin vérification
 
-        let promptFormatText  = "Raconte une histoire ";
-        let promptFormatImage = "Dessine moi ";
+        let promptFormatText  = "Raconte une histoire pour enfants ";
+        let promptFormatImage = "Illustre moi une histoire pour enfants ";
 
         if (formIsValid) {
 
-            promptFormatImage += prompt;
-
             if (genre !== "") {
-                promptFormatImage += ", dans un genre " + genre.toLowerCase();
+                promptFormatImage += "du genre " + genre.toLowerCase();
 
-                if(genre === "Pour enfants"){
-                    promptFormatText += genre.toLowerCase();
-                }else{
-                    promptFormatText += "du genre " + genre.toLowerCase();
-                }
+                promptFormatText += "du genre " + genre.toLowerCase();
             }
+
+            promptFormatImage += " à propos de " + prompt;
 
             if (style !== "") {
                 promptFormatImage += ", et dans un style " + style;
@@ -86,7 +82,7 @@ function Form(props) {
         }
     }
 
-    const genreLivre = ["", "Conte de fées", "Aventure", "Historique", "Science-fiction", "Humoristique", "Pour enfants"]
+    const genreLivre = ["", "Conte de fées", "Aventure", "Historique", "Science-fiction", "Humoristique"]
     const styleImage = ["", "BD", "Manga", "Cartoon", "Pixel art", "Flat design", "3D"]
     const placeholder = "Un jeune garçon part retrouver un trésor perdu";
 

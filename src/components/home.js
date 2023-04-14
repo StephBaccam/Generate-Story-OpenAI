@@ -97,7 +97,7 @@ function Home() {
     console.log("IMAGE " + promptImage);
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8081/chat", { prompt })
+      .post("http://localhost:8000/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
@@ -112,7 +112,7 @@ function Home() {
   const generateImage = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8081/image", { promptImage })
+      .post("http://localhost:8000/image", { promptImage })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data.data[0].b64_json);
