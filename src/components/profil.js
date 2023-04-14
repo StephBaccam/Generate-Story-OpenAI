@@ -1,9 +1,8 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { useNavigate, createSearchParams, Link } from "react-router-dom"
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../config/fbConfig";
 import { useState, useEffect } from "react";
-import Histoire from "./histoire";
 
 function Profil() {
     const navigate = useNavigate();
@@ -32,7 +31,7 @@ function Profil() {
         if(listDoc.length === 0) {
             console.log(`Liste vide, ajout des éléments`)
             console.log(`Récupération des documents de l'utilisateur ${userEmail}`)
-            const q = query(collection(db, "histoires"), where("utilisateur", "==", userEmail));
+            const q = query(collection(db, "histoires"), where("utilisateur", "==", userEmail), orderBy('createdAt', 'asc'));
 
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
@@ -51,11 +50,6 @@ function Profil() {
             });
             setListDocFirestore(listDoc);
         }
-    }
-
-    const GoToHistoirePage = (e) => {
-        console.log(`Going to Histoire ${e.target.value}`);
-        <Histoire />
     }
 
     return (

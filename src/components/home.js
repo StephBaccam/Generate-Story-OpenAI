@@ -20,6 +20,7 @@ function Home() {
   const auth = getAuth();
   const authUser = auth.currentUser;
   let isAuth = false;
+  let titreToSave = "";
 
   function CallBack(formPrompt, formPromptImage, titre) {
     setPrompt(formPrompt);
@@ -36,9 +37,18 @@ function Home() {
       generateStory();
     }else if(nextStory > storyCount){
       console.log("SUITE");
+      if(nextStory === 2) {
+        setTitre(`${titre} ${nextStory}`);
+        titreToSave = `${titre} ${nextStory}`
+      }
+      else {
+        setTitre(`${titre.slice(0, -1)} ${nextStory-1}`);
+        titreToSave = `${titre.slice(0, -1)} ${nextStory-1}`
+      }
       setLoading(true);
       generateStory();
     }
+    
   }, [prompt,promptImage,nextStory,storyCount])
 
   let histoireTexte = "";
@@ -67,12 +77,16 @@ function Home() {
     console.log("Text to Add : " + histoireTexte);
     console.log("ImageUrl to Add : " + histoireImageUrl);
     console.log("ImagePath to Add : " + histoireImagePath);
+    if(titreToSave === "") {
+      titreToSave = titre;
+    }
     const docRef = await addDoc(collection(db, "histoires"), {
-      titre: titre,
+      titre: titreToSave,
       texte: histoireTexte,
       imageUrl: histoireImageUrl,
       imagePath: histoireImagePath,
-      utilisateur: isAuth ? authUser.email : ""
+      utilisateur: isAuth ? authUser.email : "",
+      createdAt: new Date()
     });
     console.log("Document created with ID : " + docRef.id)
     setLoading(false);
@@ -83,7 +97,7 @@ function Home() {
     console.log("IMAGE " + promptImage);
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8000/chat", { prompt })
+      .post("http://localhost:8081/chat", { prompt })
       .then((res) => {
         // Update the response state with the server's response
         setResponseText(res.data);
@@ -98,7 +112,7 @@ function Home() {
   const generateImage = async () => {
     // Send a request to the server with the prompt
     await axios
-      .post("http://localhost:8000/image", { promptImage })
+      .post("http://localhost:8081/image", { promptImage })
       .then((res) => {
         // Update the response state with the server's response
         setResponse(res.data.data[0].b64_json);
@@ -149,7 +163,7 @@ function Home() {
             )}
             {responseText.length > 0 ? (
               <>
-                <p className="text-white">Votre histoire : {responseText}</p>
+                <p><b>Votre histoire :</b> {responseText}</p>
                 <button 
                   onClick={() => {
                     let followStory = "Raconte moi la suite de l'histoire : " + responseText + ". Maximum 8 phrases.";
